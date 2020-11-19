@@ -2,7 +2,7 @@
 
 <!--********** Copyright 2016 Roku Corp.  All Rights Reserved. **********-->
 
-<component name = "VideoExample" extends = "Scene" >
+<component name = "NickTV" extends = "Scene" >
 
   <script type = "text/brightscript" >
 
@@ -11,12 +11,12 @@
     sub init()
       videocontent = createObject("RoSGNode", "ContentNode")
 
-      videocontent.title = "Example Video"
+      videocontent.title = "Nick TV"
       videocontent.streamformat = "mp4"
       videocontent.url = "https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4"
       videocontent.playstart = 20
 
-      video = m.top.findNode("exampleVideo")
+      video = m.top.findNode("nowPlaying")
       video.content = videocontent
 
       video.enableUI = false
@@ -29,7 +29,7 @@
 
   <children >
 
-    <Video id = "exampleVideo"/>
+    <Video id = "nowPlaying"/>
 
   </children>
 
