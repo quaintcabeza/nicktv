@@ -11,10 +11,10 @@
     sub init()
       videocontent = createObject("RoSGNode", "ContentNode")
 
-      videocontent.title = "Nick TV"
+      videocontent.title = "Nick Slide"
       videocontent.streamformat = "mp4"
-      videocontent.url = "https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4"
-      videocontent.playstart = 20
+      videocontent.url = "http://192.168.1.3:8000/nick_slide.mp4"
+      videocontent.playstart = 0
 
       video = m.top.findNode("nowPlaying")
       video.content = videocontent
