@@ -1,11 +1,12 @@
 # nicktv
-TV simulation for Roku
 
-Starting template here: https://github.com/rokudev/samples/tree/0b92a931ff5f5959e8d8f9361c9bfda012dbb143/media/VideoExample
+![Nick TV!](/roku/images/app_icon_fhd.jpg)
+
+Old fashioned TV on Roku. Yay scheduled shows! Boo binge watching!
 
 ### Roadmap
 - [x] Hello World on Roku
-- [x] Roku app retrieves statically video file from the Internet and displays it in "TV" mode
+- [x] Roku app retrieves statically served video file from the Internet and displays it in "TV" mode
 - [x] Roku app retrieves statically served video file from local server
 - [ ] Roku app retrieves streamed video file from local server
 - [ ] Roku app hits API to retrieve hardcoded URL/Metadata for Video/Audio/Text display
@@ -30,3 +31,7 @@ to get started on installing Roku apps on your device. Note, if your browser is 
     ./build.sh
     ```
 - Open your new app on Roku. Cheers.
+
+### Resources
+Starting template here: https://github.com/rokudev/samples/tree/0b92a931ff5f5959e8d8f9361c9bfda012dbb143/media/VideoExample
+
