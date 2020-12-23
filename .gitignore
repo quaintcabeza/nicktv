@@ -5,3 +5,4 @@ pyvenv.cfg
 lib
 .DS_Store
 __pycache__
+*.zip
