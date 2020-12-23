@@ -1,0 +1,9 @@
+type Query {
+    nowPlaying: TVShow
+}
+
+type TVShow {
+    name: String!
+    episode: Int!
+    season: Int
+}
