@@ -4,8 +4,6 @@ from flask_pymongo import PyMongo
 import logging
 
 application = Flask(__name__)
-gunicorn_logger = logging.getLogger('gunicorn.error')
-application.logger.handlers = gunicorn_logger.handlers
 
 application.config["MONGO_URI"] = 'mongodb://' + os.environ['MONGODB_USERNAME'] + ':' + os.environ['MONGODB_PASSWORD'] + '@' + os.environ['MONGODB_HOSTNAME'] + ':27017/' + os.environ['MONGODB_DATABASE']
 
@@ -17,32 +15,25 @@ def index():
     application.logger.info("indexing")
     return jsonify(
         status=True,
-        message='Welcome to the Dockerized Flask MongoDB app: 6'
+        message='Welcome to the Dockerized Flask MongoDB app: 1'
     )
 
 @application.route('/todo')
 def todo():
     application.logger.info("todoing")
-    try:
-        _todos = db.todo.find()
-        item = {}
-        data = []
-        for todo in _todos:
-            item = {
-                'id': str(todo['_id']),
-                'todo': todo['todo']
-            }
-            data.append(item)
-        return jsonify(
-            status=True,
-            data=data
-        )
-    except Exception as err:
-        application.logger.error("error: ", err)
-        return jsonify(
-            status=False,
-            message=str(err)
-        )
+    _todos = db.todo.find()
+    item = {}
+    data = []
+    for todo in _todos:
+        item = {
+            'id': str(todo['_id']),
+            'todo': todo['todo']
+        }
+        data.append(item)
+    return jsonify(
+        status=True,
+        data=data
+    )
 
 
 @application.route('/todo', methods=['POST'])
@@ -57,6 +48,13 @@ def createTodo():
         status=True,
         message='To-do saved successfully!'
     ), 201
+
+
+if __name__ != "__main__":
+    gunicorn_logger = logging.getLogger('gunicorn.error')
+    application.logger.handlers = gunicorn_logger.handlers
+    application.logger.setLevel(gunicorn_logger.level)
+
 
 if __name__ == "__main__":
     ENVIRONMENT_DEBUG = os.environ.get("APP_DEBUG", True)
