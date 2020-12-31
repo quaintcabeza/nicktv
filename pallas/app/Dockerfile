@@ -5,7 +5,7 @@ ENV GROUP_ID=1000 \
 
 WORKDIR /var/www/
 
-ADD . /var/www/
+COPY . /var/www/
 RUN pip install -r requirements.txt
 RUN pip install gunicorn
 
@@ -16,4 +16,4 @@ USER www
 
 EXPOSE 5000
 
-CMD [ "gunicorn", "-w", "4", "--bind", "0.0.0.0:5000", "wsgi"]
+CMD ["gunicorn", "--config=gunicorn.py", "wsgi"]
