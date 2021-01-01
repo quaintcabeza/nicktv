@@ -5,7 +5,7 @@ import logging
 
 application = Flask(__name__)
 
-application.config["MONGO_URI"] = 'mongodb://' + os.environ['MONGODB_USERNAME'] + ':' + os.environ['MONGODB_PASSWORD'] + '@' + os.environ['MONGODB_HOSTNAME'] + ':27017/' + os.environ['MONGODB_DATABASE']
+application.config["MONGO_URI"] = f"mongodb://{os.environ['MONGODB_HOSTNAME']}:27017/{os.environ['MONGODB_DATABASE']}"
 
 mongo = PyMongo(application)
 db = mongo.db

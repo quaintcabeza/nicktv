@@ -11,9 +11,7 @@ services:
     environment:
       APP_ENV: ${APP_ENV:-prod}
       APP_PORT: 5000
-      MONGODB_DATABASE: flaskdb
-      MONGODB_USERNAME: flaskuser
-      MONGODB_PASSWORD: your_mongodb_password
+      MONGODB_DATABASE: nicktvdb
       MONGODB_HOSTNAME: mongodb
     volumes:
       - ./app:/var/www
@@ -28,11 +26,9 @@ services:
     image: mongo:4.0.8
     container_name: mongodb
     restart: unless-stopped
-    command: mongod --auth
+    command: mongod
     environment:
-      MONGO_INITDB_ROOT_USERNAME: mongodbuser
-      MONGO_INITDB_ROOT_PASSWORD: your_mongodb_root_password
-      MONGO_INITDB_DATABASE: flaskdb
+      MONGO_INITDB_DATABASE: nicktvdb
       MONGODB_DATA_DIR: /data/db
       MONDODB_LOG_DIR: /dev/null
     volumes:
@@ -70,8 +66,6 @@ networks:
 
 volumes:
   mongodbdata:
-    driver: local
-  appdata:
     driver: local
   nginxdata:
     driver: local
