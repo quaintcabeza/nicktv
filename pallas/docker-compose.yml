@@ -1,0 +1,71 @@
+version: '3'
+services:
+
+  flask:
+    build:
+      context: app
+      dockerfile: Dockerfile
+    container_name: flask
+    image: nicktv-flask:latest
+    restart: unless-stopped
+    environment:
+      APP_ENV: ${APP_ENV:-prod}
+      APP_PORT: 5000
+      MONGODB_DATABASE: nicktvdb
+      MONGODB_HOSTNAME: mongodb
+    volumes:
+      - ./app:/var/www
+    depends_on:
+      - mongodb
+    networks:
+      - frontend
+      - backend
+    command: ["gunicorn", "--config=gunicorn.py", "wsgi"] # Reload doesn't work without this
+
+  mongodb:
+    image: mongo:4.0.8
+    container_name: mongodb
+    restart: unless-stopped
+    command: mongod
+    environment:
+      MONGO_INITDB_DATABASE: nicktvdb
+      MONGODB_DATA_DIR: /data/db
+      MONDODB_LOG_DIR: /dev/null
+    volumes:
+      - mongodbdata:/data/db
+    networks:
+      - backend
+
+  webserver:
+    build:
+      context: nginx
+      dockerfile: Dockerfile
+    image: nicktv-webserver:latest
+    container_name: webserver
+    restart: unless-stopped
+    environment:
+      APP_ENV: "prod"
+      APP_NAME: "webserver"
+      APP_DEBUG: "true"
+      SERVICE_NAME: "webserver"
+    ports:
+      - "2222:80"
+      - "2223:443"
+    volumes:
+      - nginxdata:/var/log/nginx
+    depends_on:
+      - flask
+    networks:
+      - frontend
+
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge
+
+volumes:
+  mongodbdata:
+    driver: local
+  nginxdata:
+    driver: local
