@@ -6,7 +6,7 @@ services:
       context: app
       dockerfile: Dockerfile
     container_name: flask
-    image: digitalocean.com/flask-python:3.6
+    image: nicktv-flask:latest
     restart: unless-stopped
     environment:
       APP_ENV: ${APP_ENV:-prod}
@@ -40,7 +40,7 @@ services:
     build:
       context: nginx
       dockerfile: Dockerfile
-    image: digitalocean.com/webserver:latest
+    image: nicktv-webserver:latest
     container_name: webserver
     restart: unless-stopped
     environment:
