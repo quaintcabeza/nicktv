@@ -1,0 +1,15 @@
+type Query {
+    nowPlaying: NowPlaying!
+}
+
+union NowPlaying = Video | NothingPlaying
+
+type Video {
+    name: String!
+    uri: String!
+    lastPlayedEpoch: Int
+}
+
+type NothingPlaying {
+    tryAgainInSec: Int!
+}

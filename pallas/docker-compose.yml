@@ -5,7 +5,7 @@ services:
     build:
       context: app
       dockerfile: Dockerfile
-    container_name: flask
+    container_name: nicktv-flask
     image: nicktv-flask:latest
     restart: unless-stopped
     environment:
@@ -24,7 +24,7 @@ services:
 
   mongodb:
     image: mongo:4.0.8
-    container_name: mongodb
+    container_name: nicktv-mongodb
     restart: unless-stopped
     command: mongod
     environment:
@@ -41,7 +41,7 @@ services:
       context: nginx
       dockerfile: Dockerfile
     image: nicktv-webserver:latest
-    container_name: webserver
+    container_name: nicktv-webserver
     restart: unless-stopped
     environment:
       APP_ENV: "prod"

@@ -1,3 +1,6 @@
+build:
+	@APP_ENV=dev docker-compose build
+
 up:
 	@APP_ENV=dev docker-compose up -d
 
@@ -7,8 +10,11 @@ up-prod:
 down:
 	docker-compose down
 
+shell:
+	docker exec -it nicktv-flask bin/sh
+
 logs:
-	docker logs -f flask
+	docker logs -f nicktv-flask
 
 ping:
 	curl -i http://localhost:2222
