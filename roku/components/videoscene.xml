@@ -9,19 +9,36 @@
     <![CDATA[
 
     sub init()
-      videocontent = createObject("RoSGNode", "ContentNode")
+      getNowPlaying()
+    end sub
 
-      videocontent.title = "You're watching Nick TV"
-      videocontent.streamformat = "mp4"
-      videocontent.url = "http://192.168.1.22:8000/nick.mp4"
-      videocontent.playstart = 0
+    sub getNowPlaying()
+      print "Creating NowPlaying Task..."
+      m.nowPlayingTask = CreateObject("roSGNode", "nowPlayingTask")
+      m.nowPlayingTask.ObserveField("uri", "playVideo")
+      m.nowPlayingTask.control = "RUN"
+    end sub
 
+    sub playVideo() as void
+      uri = m.nowPlayingTask.uri
       video = m.top.findNode("nowPlaying")
-      video.content = videocontent
+      if NOT (video.content <> invalid AND video.content.url = uri) then
+        print "Now playing: " + m.nowPlayingTask.name
+        videocontent = createObject("RoSGNode", "ContentNode")
 
-      video.enableUI = false
-      video.setFocus(true)
-      video.control = "play"
+        videocontent.title = "You're watching Nick TV"
+        videocontent.streamformat = "mp4"
+        videocontent.url = uri
+        videocontent.playstart = 0
+
+        video.content = videocontent
+
+        video.enableUI = false
+        video.setFocus(true)
+        video.control = "play"
+      else
+        print "Already playing: " + m.nowPlayingTask.name
+      end if
     end sub
     ]]>
 
