@@ -21,6 +21,7 @@ def playground():
 @app.route('/graphql', methods=['POST'])
 def graphql_server():
     data = request.get_json()
+    app.logger.info(f"Request: {data}")
     success, result = graphql_sync(
         schema,
         data,
@@ -28,6 +29,7 @@ def graphql_server():
         debug=app.debug
     )
     status_code = 200 if success else 400
+    app.logger.info(f"Response: ({status_code}) {result}")
     return jsonify(result), status_code
 
 
