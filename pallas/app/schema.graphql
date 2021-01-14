@@ -2,14 +2,26 @@ type Query {
     nowPlaying: NowPlaying!
 }
 
-union NowPlaying = Video | NothingPlaying
+type Mutation {
+    markPlayed(mediaId: String!): Boolean!
+}
+
+union NowPlaying = Video | Audio | NothingPlaying
 
 type Video {
+    mediaId: String!
+    name: String!
+    uri: String!
+    lastPlayedEpoch: Int
+}
+
+type Audio {
+    mediaId: String!
     name: String!
     uri: String!
     lastPlayedEpoch: Int
 }
 
 type NothingPlaying {
-    tryAgainInMin: Int!
+    tryAgainInMin: Float!
 }
