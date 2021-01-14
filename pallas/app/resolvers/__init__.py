@@ -20,17 +20,17 @@ def resolve_now_playing(_, info):
     if (anything_on == "video"):
         return {
             "__typename": "Video",
-            "media_id": "Key and Peele/Season 1/Episode 1",
+            "uri": "Key and Peele/Season 1/Episode 1",
             "name": "Key and Peele",
-            "uri": "http://192.168.1.22:8000/nick.mp4",
+            "url": "http://192.168.1.22:8000/nick.mp4",
             "last_played_epoch": int(time.time())
         }
     elif (anything_on == "audio"):
         return {
             "__typename": "Audio",
-            "media_id": "Piper Jones/The Wandering Stars/Gordon Duncan Tunes",
+            "uri": "Piper Jones/The Wandering Stars/Gordon Duncan Tunes",
             "name": "Piper Jones",
-            "uri": "http://192.168.1.22:8000/piper.mp3",
+            "url": "http://192.168.1.22:8000/piper.mp3",
             "last_played_epoch": int(time.time())
         }
     else:
@@ -44,7 +44,7 @@ mutation = MutationType()
 
 @convert_kwargs_to_snake_case
 @mutation.field('markPlayed')
-def resolve_mark_played(_, info, mediaId):
+def resolve_mark_played(_, info, uri):
     return True
 
 

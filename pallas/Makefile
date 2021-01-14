@@ -18,3 +18,6 @@ logs:
 
 clear-db:
 	docker volume rm pallas_mongodbdata
+
+ping:
+	curl -X POST -H "Content-Type: application/json" -d '{"query": "query GetNowPlaying { nowPlaying {__typename ... on Video { uri, name, url, lastPlayedEpoch } ... on Audio { uri, name, url, lastPlayedEpoch } ... on NothingPlaying { tryAgainInMin } } }"}' http://127.0.0.1:2222/graphql

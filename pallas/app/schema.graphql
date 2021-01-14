@@ -3,22 +3,22 @@ type Query {
 }
 
 type Mutation {
-    markPlayed(mediaId: String!): Boolean!
+    markPlayed(uri: String!): Boolean!
 }
 
 union NowPlaying = Video | Audio | NothingPlaying
 
 type Video {
-    mediaId: String!
-    name: String!
     uri: String!
+    name: String!
+    url: String!
     lastPlayedEpoch: Int
 }
 
 type Audio {
-    mediaId: String!
-    name: String!
     uri: String!
+    name: String!
+    url: String!
     lastPlayedEpoch: Int
 }
 
