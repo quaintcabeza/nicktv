@@ -1,0 +1,58 @@
+<?xml version = "1.0" encoding = "utf-8" ?> 
+
+<!--********** Copyright 2016 Roku Corp.  All Rights Reserved. **********-->
+
+<component name = "NickAudioPlayer" extends = "Group" >
+
+  <interface>
+      <field id="allDone" type="boolean" value="False"/>
+      <field id="uri" type="string" value=""/>
+      <field id="name" type="string" value=""/>
+      <field id="url" type="string" value=""/>
+      <function name="play"/>
+  </interface>
+
+  <script type = "text/brightscript" >
+
+    <![CDATA[
+
+    sub init()
+      audio = m.top.findNode("audio")
+      audio.ObserveField("state", "handleAudioStateChanged")
+    end sub
+
+    function play() as void
+      print "Now playing: " + m.top.name
+
+      audiocontent = createObject("RoSGNode", "ContentNode")
+      audiocontent.title = m.top.name
+      audiocontent.streamformat = "mp3"
+      audiocontent.url = m.top.url
+      audiocontent.playstart = 0
+
+      audio = m.top.findNode("audio")
+      audio.content = audiocontent
+
+      audio.setFocus(true)
+      audio.control = "play"
+    end function
+
+    sub handleAudioStateChanged()
+      audio = m.top.findNode("audio")
+      if (audio.state = "finished") then
+        print "Audio finished"
+        m.top.allDone = True
+      end if
+    end sub
+
+    ]]>
+
+  </script>
+
+  <children >
+
+    <Audio id = "audio"/>
+
+  </children>
+
+</component>

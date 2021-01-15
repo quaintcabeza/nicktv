@@ -1,0 +1,55 @@
+<?xml version = "1.0" encoding = "utf-8" ?> 
+
+<!--********** Copyright 2016 Roku Corp.  All Rights Reserved. **********-->
+
+<component name = "NickTV" extends = "Scene" >
+
+  <script type = "text/brightscript" >
+
+    <![CDATA[
+
+    sub init()
+      getNowPlaying()
+    end sub
+
+    sub getNowPlaying()
+      print "Creating NowPlaying Task..."
+      m.nowPlayingTask = CreateObject("roSGNode", "nowPlayingTask")
+      m.nowPlayingTask.ObserveField("url", "playMedia")
+      m.nowPlayingTask.control = "RUN"
+    end sub
+
+    sub playMedia()
+      player = CreateObject("roSGNode", "NickMediaPlayer")
+      player.mediaType = m.nowPlayingTask.mediaType
+      player.name = m.nowPlayingTask.name
+      player.url = m.nowPlayingTask.url
+      player.uri = m.nowPlayingTask.uri
+
+      player.ObserveField("allDone", "handleMediaDone")
+
+      group = m.top.findNode("nowPlaying")
+      group.insertChild(player, 0)
+
+      player.callFunc("play")
+    end sub
+
+    sub handleMediaDone()
+      print "Cleaning up..."
+      group = m.top.findNode("nowPlaying")
+      group.removeChildIndex(0)
+      getNowPlaying()
+    end sub
+
+    ]]>
+
+  </script>
+
+  <children >
+
+    <Group id = "nowPlaying">
+    </Group>
+
+  </children>
+
+</component>

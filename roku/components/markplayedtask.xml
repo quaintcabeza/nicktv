@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?> 
+
+<component name="MarkPlayedTask" extends="Task">
+
+  <interface>
+      <field id="uri" type="string" value=""/>
+      <field id="allDone" type="boolean" value="False"/>
+  </interface>
+
+  <script type = "text/brightscript" uri = "pkg:/components/Requests.brs" />
+
+  <script type="text/brightscript" >
+    <![CDATA[
+    
+      sub init()
+        m.top.functionName = "notifyServer"
+      end sub
+
+      sub notifyServer()
+        data = {
+          "query": "mutation DoneWithMedia { markPlayed(uri: " + chr(34) + m.top.uri + chr(34) + ") }"
+        }
+        print "Notifying server about: " + m.top.uri
+        response = Requests().post("http://192.168.1.2:2222/graphql", {"json": data})
+
+        if (response.statuscode = 200) then
+          print "Notify success"
+          m.top.allDone = True
+        else
+          print "Error code received: " + response.statuscode
+        end if
+      end sub
+  ]]>
+  </script>
+
+  <children>
+  </children>
+
+</component>

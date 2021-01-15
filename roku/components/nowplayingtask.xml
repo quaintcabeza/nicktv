@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?> 
+
+<component name="NowPlayingTask" extends="Task">
+
+  <interface>
+      <field id="mediaType" type="string" value=""/>
+      <field id="name" type="string" value=""/>
+      <field id="uri" type="string" value=""/>
+      <field id="url" type="string" value=""/>
+  </interface>
+
+  <script type = "text/brightscript" uri = "pkg:/components/Requests.brs" />
+
+  <script type="text/brightscript" >
+    <![CDATA[
+    
+      sub init()
+        m.timer = m.top.findNode("tryAgainTimer")
+        m.timer.ObserveField("fire","handleTimerFired")
+        m.top.functionName = "pingServer"
+      end sub
+
+      sub pingServer()
+        data = {
+            "query": "query GetNowPlaying { nowPlaying {__typename ... on Video { uri, name, url, lastPlayedEpoch } ... on Audio { uri, name, url, lastPlayedEpoch } ... on NothingPlaying { tryAgainInMin } } }"
+        }
+        print "Pinging server..."
+        response = Requests().post("http://192.168.1.2:2222/graphql", {"json": data})
+
+        if (response.statuscode = 200) then
+          res = response.json.data.nowPlaying
+          if (res["__typename"] = "NothingPlaying") then
+            print "There's nothing on. Trying again in " + str(res.tryAgainInMin) + " minutes..."
+            setRetryTimer(res.tryAgainInMin)
+          else
+            print "There's something on: " + res.name
+            m.top.mediaType = res["__typename"]
+            m.top.name = res.name
+            m.top.uri = res.uri
+            m.top.url = res.url  ' MUST BE LAST PARAM TO BE SET
+          end if
+        else
+          print "Error code received: " + response.statuscode
+        end if
+      end sub
+
+      sub setRetryTimer(minutes)
+        m.timer.duration = minutes * 60
+        m.timer.control = "start"
+      end sub
+
+      sub handleTimerFired()
+        m.top.control = "RUN"
+      end sub
+
+  ]]>
+  </script>
+
+  <children>
+
+    <Timer id="tryAgainTimer" />
+
+  </children>
+
+</component>

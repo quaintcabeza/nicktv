@@ -15,7 +15,7 @@ query = QueryType()
 @convert_kwargs_to_snake_case
 @query.field('nowPlaying')
 def resolve_now_playing(_, info):
-    anything_on = "nothing"
+    anything_on = "video"
 
     if (anything_on == "video"):
         return {
