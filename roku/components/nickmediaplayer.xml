@@ -1,0 +1,67 @@
+<?xml version = "1.0" encoding = "utf-8" ?> 
+
+<!--********** Copyright 2016 Roku Corp.  All Rights Reserved. **********-->
+
+<component name = "NickMediaPlayer" extends = "Group" >
+
+  <interface>
+      <field id="allDone" type="boolean" value="False"/>
+      <field id="mediaType" type="string" value=""/>
+      <field id="uri" type="string" value=""/>
+      <field id="name" type="string" value=""/>
+      <field id="url" type="string" value=""/>
+      <function name="play"/>
+  </interface>
+
+  <script type = "text/brightscript" >
+
+    <![CDATA[
+
+    sub init()
+      audio = m.top.findNode("nickAudio")
+      audio.ObserveField("allDone", "handleMediaDone")
+      video = m.top.findNode("nickVideo")
+      video.ObserveField("allDone", "handleMediaDone")
+    end sub
+
+    function play() as void
+      player = invalid
+      if (m.top.mediaType = "Video") then
+        player = m.top.findNode("nickVideo")
+      else if (m.top.mediaType = "Audio") then
+        player = m.top.findNode("nickAudio")
+      else
+        print "Unsupported media!: " + m.top.mediaType
+        return
+      end if
+
+      player.name = m.top.name
+      player.uri = m.top.uri
+      player.url = m.top.url
+      player.callFunc("play")
+    end function
+
+    sub handleMediaDone()
+        m.markPlayedTask = CreateObject("roSGNode", "markPlayedTask")
+        m.markPlayedTask.uri = m.top.uri
+        m.markPlayedTask.ObserveField("allDone", "fireAllDone")
+        m.markPlayedTask.control = "RUN"
+    end sub
+
+    sub fireAllDone()
+      print "NickMediaPlayer is All Done"
+      m.top.allDone = True
+    end sub
+
+    ]]>
+
+  </script>
+
+  <children >
+
+    <NickVideoPlayer id = "nickVideo"/>
+    <NickAudioPlayer id = "nickAudio"/>
+
+  </children>
+
+</component>

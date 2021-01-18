@@ -19,3 +19,4 @@ to get started on installing Roku apps on your device.
 - Making HTTP requests: https://rokulikeahurricane.io/everything_about_http
 - Roku requests library: https://github.com/rokucommunity/roku-requests
 - Using Task Nodes to make async requests: https://github.com/rokudev/samples/tree/master/ux%20components/control/TaskExample
+- What can and cannot be run where: https://developer.roku.com/docs/developer-program/core-concepts/scenegraph-brightscript/brightscript-support.md

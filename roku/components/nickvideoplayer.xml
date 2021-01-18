@@ -1,0 +1,59 @@
+<?xml version = "1.0" encoding = "utf-8" ?> 
+
+<!--********** Copyright 2016 Roku Corp.  All Rights Reserved. **********-->
+
+<component name = "NickVideoPlayer" extends = "Group" >
+
+  <interface>
+      <field id="allDone" type="boolean" value="False"/>
+      <field id="uri" type="string" value=""/>
+      <field id="name" type="string" value=""/>
+      <field id="url" type="string" value=""/>
+      <function name="play"/>
+  </interface>
+
+  <script type = "text/brightscript" >
+
+    <![CDATA[
+
+    sub init()
+      video = m.top.findNode("video")
+      video.ObserveField("state", "handleVideoStateChanged")
+    end sub
+
+    function play() as void
+      print "Now playing: " + m.top.name
+
+      videocontent = createObject("RoSGNode", "ContentNode")
+      videocontent.title = m.top.name
+      videocontent.streamformat = "mp4"
+      videocontent.url = m.top.url
+      videocontent.playstart = 0
+
+      video = m.top.findNode("video")
+      video.content = videocontent
+
+      video.enableUI = true
+      video.setFocus(true)
+      video.control = "play"
+    end function
+
+    sub handleVideoStateChanged()
+      video = m.top.findNode("video")
+      if (video.state = "finished") then
+        print "Video finished"
+        m.top.allDone = True
+      end if
+    end sub
+
+    ]]>
+
+  </script>
+
+  <children >
+
+    <Video id = "video"/>
+
+  </children>
+
+</component>
