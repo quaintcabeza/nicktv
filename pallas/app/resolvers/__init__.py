@@ -47,5 +47,11 @@ mutation = MutationType()
 def resolve_mark_played(_, info, uri):
     return True
 
+@convert_kwargs_to_snake_case
+@mutation.field('addToSchedule')
+def resolve_add_to_schedule(_, info, showTimes):
+    logger.info(f"Adding to schedule: {showTimes}")
+    return True
+
 
 schema = make_executable_schema(type_defs, query, mutation, snake_case_fallback_resolvers)

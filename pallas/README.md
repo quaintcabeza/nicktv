@@ -2,7 +2,8 @@
 
 ### How to run service
 ```
-$ make up
+$ export CALENDAR_SERVICE_ACCOUNT_KEY=/path/to/service/account/key
+$ make up-prod
 ```
 Navigate to http://127.0.0.1:2222/graphql. Send this query:
 ```
@@ -69,3 +70,5 @@ query GetNowPlaying {
 - [Google API Python Client Auth](https://github.com/googleapis/google-api-python-client/blob/master/docs/oauth-server.md)
 - [Google Calendar API Python Quickstart](https://developers.google.com/calendar/quickstart/python)
 - [Google Calendar API Reference](https://developers.google.com/calendar/v3/reference/events)
+- https://blog.knoldus.com/running-a-cron-job-in-docker-container/
+- https://www.marmanold.com/tech/cron-in-docker-with-debian-slim/

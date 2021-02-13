@@ -4,6 +4,7 @@ type Query {
 
 type Mutation {
     markPlayed(uri: String!): Boolean!
+    addToSchedule(showTimes: [ShowTime!]): Boolean!
 }
 
 union NowPlaying = Video | Audio | NothingPlaying
@@ -24,4 +25,10 @@ type Audio {
 
 type NothingPlaying {
     tryAgainInMin: Float!
+}
+
+input ShowTime {
+    name: String!
+    showStartEpoch: Int!
+    showEndEpoch: Int!
 }

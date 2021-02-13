@@ -58,6 +58,20 @@ services:
     networks:
       - frontend
 
+  calendar:
+    build:
+      context: calendar
+      dockerfile: Dockerfile
+    container_name: nicktv-calendar
+    image: nicktv-calendar:latest
+    volumes:
+      - ./calendar:/var/calendar
+      - ${CALENDAR_SERVICE_ACCOUNT_KEY}:/secrets/calendar-service-account-key.json
+    depends_on:
+      - webserver
+    networks:
+      - frontend
+
 networks:
   frontend:
     driver: bridge
