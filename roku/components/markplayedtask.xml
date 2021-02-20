@@ -3,6 +3,7 @@
 <component name="MarkPlayedTask" extends="Task">
 
   <interface>
+      <field id="name" type="string" value=""/>
       <field id="uri" type="string" value=""/>
       <field id="allDone" type="boolean" value="False"/>
   </interface>
@@ -18,7 +19,7 @@
 
       sub notifyServer()
         data = {
-          "query": "mutation DoneWithMedia { markPlayed(uri: " + chr(34) + m.top.uri + chr(34) + ") }"
+          "query": "mutation DoneWithMedia { markPlayed(name: " + chr(34) + m.top.name + chr(34) + ", uri: " + chr(34) + m.top.uri + chr(34) + ") }"
         }
         print "Notifying server about: " + m.top.uri
         response = Requests().post("http://192.168.1.2:2222/graphql", {"json": data})

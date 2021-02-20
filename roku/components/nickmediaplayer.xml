@@ -43,6 +43,7 @@
 
     sub handleMediaDone()
         m.markPlayedTask = CreateObject("roSGNode", "markPlayedTask")
+        m.markPlayedTask.name = m.top.name
         m.markPlayedTask.uri = m.top.uri
         m.markPlayedTask.ObserveField("allDone", "fireAllDone")
         m.markPlayedTask.control = "RUN"

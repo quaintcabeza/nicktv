@@ -1,10 +1,11 @@
 type Query {
     nowPlaying: NowPlaying!
+    latestSchedule: [ShowTime!]!
 }
 
 type Mutation {
-    markPlayed(uri: String!): Boolean!
-    addToSchedule(showTimes: [ShowTime!]): Boolean!
+    markPlayed(name: String!, uri: String!): Boolean!
+    addToSchedule(showTimes: [ShowTimeInput!]!): Boolean!
 }
 
 union NowPlaying = Video | Audio | NothingPlaying
@@ -13,22 +14,28 @@ type Video {
     uri: String!
     name: String!
     url: String!
-    lastPlayedEpoch: Int
+    lastPlayed: String
 }
 
 type Audio {
     uri: String!
     name: String!
     url: String!
-    lastPlayedEpoch: Int
+    lastPlayed: String
 }
 
 type NothingPlaying {
     tryAgainInMin: Float!
 }
 
-input ShowTime {
+input ShowTimeInput {
     name: String!
-    showStartEpoch: Int!
-    showEndEpoch: Int!
+    showStart: String!
+    showEnd: String!
+}
+
+type ShowTime {
+    name: String!
+    showStart: String!
+    showEnd: String!
 }
