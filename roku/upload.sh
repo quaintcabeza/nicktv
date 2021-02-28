@@ -1,5 +1,5 @@
 #!/bin/bash
-ROKU_DEV_TARGET=192.168.1.7   # put YOUR roku IP here
+ROKU_DEV_TARGET=192.168.1.4   # put YOUR roku IP here
 
 # wake up/interrupt Roku - workaround for fw5.4 crash
 curl -sS -d '' http://$ROKU_DEV_TARGET:8060/keypress/Home
