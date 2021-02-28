@@ -15,6 +15,7 @@ services:
       MONGODB_HOSTNAME: mongodb
     volumes:
       - ./app:/var/www
+      - ${MEDIA_ROOT_DIR}:/www/media
     depends_on:
       - mongodb
     networks:

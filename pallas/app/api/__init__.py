@@ -1,8 +1,8 @@
+import logging
+import os
 from ariadne import graphql_sync
 from ariadne.constants import PLAYGROUND_HTML
 from flask import Flask, request, jsonify
-import logging
-import os
 from resolvers import schema
 
 app = Flask(__name__)
@@ -11,7 +11,7 @@ app = Flask(__name__)
 @app.route('/graphql', methods=['GET'])
 def playground():
     return PLAYGROUND_HTML, 200
-    
+
 
 @app.route('/graphql', methods=['POST'])
 def graphql_server():
