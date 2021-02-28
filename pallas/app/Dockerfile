@@ -1,4 +1,4 @@
-FROM python:3.6.8-alpine3.9
+FROM python:3.9.2-alpine3.13
 
 ENV GROUP_ID=1000 \
     USER_ID=1000

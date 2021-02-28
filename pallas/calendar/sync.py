@@ -9,6 +9,7 @@ import logging
 import pyrfc3339
 import requests
 import sys
+import pytz
 
 logging.basicConfig(
     level=logging.INFO,
@@ -34,7 +35,7 @@ def get_shows_starting_within_time_slot(time_slot_start, time_slot_end):
         SERVICE_ACCOUNT_FILE,
         scopes= ['https://www.googleapis.com/auth/calendar.readonly']
     )
-    service = googleapiclient.discovery.build('calendar', 'v3', credentials=credentials)
+    service = googleapiclient.discovery.build('calendar', 'v3', credentials=credentials, cache_discovery=False)
 
     events_result = service.events().list(
         calendarId=NICKTV_ID,
@@ -62,7 +63,7 @@ def get_shows_starting_within_time_slot(time_slot_start, time_slot_end):
 
 def add_shows_to_schedule(shows):
     show_times_str = ", ".join([
-        f"{{ name: \"{show.name}\", showStartEpoch: {int(show.start_time.timestamp())}, showEndEpoch: {int(show.end_time.timestamp())}}}"
+        f"{{ name: \"{show.name}\", showStart: \"{show.start_time.isoformat()}\", showEnd: \"{show.end_time.isoformat()}\" }}"
         for show in shows
     ])
     payload = {
@@ -75,7 +76,7 @@ def add_shows_to_schedule(shows):
 
 
 def main():
-    logger.info(f"Calendar cron awake")
+    logger.info(f"Starting calendar sync")
     parser = argparse.ArgumentParser()
     parser.add_argument(
         '--time_slot_start',
@@ -94,9 +95,9 @@ def main():
     args = parser.parse_args()
     assert(args.time_slot_start < args.time_slot_end)
 
-    now = datetime.now()
-    time_slot_start = datetime(now.year, now.month, now.day, now.hour) + timedelta(minutes=args.time_slot_start)
-    time_slot_end = datetime(now.year, now.month, now.day, now.hour) + timedelta(minutes=args.time_slot_end)
+    now = datetime.utcnow()
+    time_slot_start = datetime(now.year, now.month, now.day, now.hour, tzinfo=pytz.UTC) + timedelta(minutes=args.time_slot_start)
+    time_slot_end = datetime(now.year, now.month, now.day, now.hour, tzinfo=pytz.UTC) + timedelta(minutes=args.time_slot_end)
     logger.info(f"Looking for scheduled shows in: ({time_slot_start}, {time_slot_end})")
 
     shows = get_shows_starting_within_time_slot(time_slot_start, time_slot_end)

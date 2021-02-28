@@ -7,13 +7,44 @@ $ make up-prod
 ```
 Navigate to http://127.0.0.1:2222/graphql. Send this query:
 ```
+mutation DoneWithMedia {
+  markPlayed(name: "kp0", uri: "bobloblaw")
+}
+
+mutation AddToSchedule {
+  addToSchedule(showTimes: [{
+    name: "kp0",
+    showStart: "2021-02-20T15:00:00",
+    showEnd: "2021-02-20T16:00:00"
+  }, {
+    name: "heyA",
+    showStart: "2021-02-20T09:30:00",
+    showEnd: "2021-02-20T10:00:00"
+  }])
+}
+
+query GetScheduleForToday {
+  latestSchedule {
+    name,
+    showStart,
+    showEnd
+  }
+}
+
 query GetNowPlaying {
   nowPlaying {
     __typename
     ... on Video {
-      name,
       uri,
-      lastPlayedEpoch
+      name,
+      url,
+      lastPlayed
+    }
+    ... on Audio {
+      uri,
+      name,
+      url,
+      lastPlayed
     }
     ... on NothingPlaying {
       tryAgainInMin

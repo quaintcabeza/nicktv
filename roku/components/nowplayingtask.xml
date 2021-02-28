@@ -22,7 +22,7 @@
 
       sub pingServer()
         data = {
-            "query": "query GetNowPlaying { nowPlaying {__typename ... on Video { uri, name, url, lastPlayedEpoch } ... on Audio { uri, name, url, lastPlayedEpoch } ... on NothingPlaying { tryAgainInMin } } }"
+            "query": "query GetNowPlaying { nowPlaying {__typename ... on Video { uri, name, url } ... on Audio { uri, name, url } ... on NothingPlaying { tryAgainInMin } } }"
         }
         print "Pinging server..."
         response = Requests().post("http://192.168.1.2:2222/graphql", {"json": data})
