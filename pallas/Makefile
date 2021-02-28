@@ -27,3 +27,9 @@ calendar-shell:
 
 calendar-logs:
 	docker logs -f nicktv-calendar
+
+webserver-shell:
+	docker exec -it nicktv-webserver /bin/sh
+
+webserver-logs:
+	docker logs -f nicktv-webserver

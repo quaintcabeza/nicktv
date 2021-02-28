@@ -53,6 +53,7 @@ services:
       - "2223:443"
     volumes:
       - nginxdata:/var/log/nginx
+      - ${MEDIA_ROOT_DIR}:/www/media
     depends_on:
       - flask
     networks:

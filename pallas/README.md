@@ -2,8 +2,9 @@
 
 ### How to run service
 ```
+$ export MEDIA_ROOT_DIR=/path/to/media/folder
 $ export CALENDAR_SERVICE_ACCOUNT_KEY=/path/to/service/account/key
-$ make up-prod
+$ sudo -E make up-prod
 ```
 Navigate to http://127.0.0.1:2222/graphql. Send this query:
 ```
