@@ -4,7 +4,7 @@ build:
 up:
 	@APP_ENV=dev docker-compose up -d
 
-up-prod:
+up-prod: build
 	@APP_ENV=prod docker-compose up -d
 
 down:
@@ -15,6 +15,9 @@ shell:
 
 logs:
 	docker logs -f nicktv-flask
+
+test:
+	docker exec -it nicktv-flask python3 -m unittest
 
 clear-db:
 	docker volume rm pallas_mongodbdata

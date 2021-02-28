@@ -1,8 +1,9 @@
-from ariadne import make_executable_schema, load_schema_from_path, QueryType, MutationType
 from datetime import datetime
-from .db_bridge import DbBridge
 import logging
 import time
+from ariadne import make_executable_schema, load_schema_from_path, QueryType, MutationType
+from .db_bridge import DbBridge
+from .media_bridge import MediaBridge
 
 
 logger = logging.getLogger('gunicorn.error.' + __name__)
@@ -13,6 +14,7 @@ query = QueryType()
 mutation = MutationType()
 
 db_bridge = DbBridge.get_instance()
+media_bridge = MediaBridge.get_instance()
 
 
 @mutation.field('addToSchedule')
@@ -26,31 +28,56 @@ def resolve_latest_schedule(_, info):
 @query.field('nowPlaying')
 def resolve_now_playing(_, info):
     now_playing = db_bridge.get_now_playing(datetime.now())
+    try_again_time = 1
     if not now_playing:
+        logger.info("Did not find any scheduled shows")
         return {
             "__typename": "NothingPlaying",
-            "tryAgainInMin": 0.5
+            "tryAgainInMin": try_again_time
         }
 
-    last_played_episode = db_bridge.get_last_played(now_playing['name'])
-    anything_on = "video"
+    show_name = now_playing['name']
+    logger.info(f"Scheduled show found: {now_playing}")
 
-    if (anything_on == "video"):
+    last_played = db_bridge.get_last_played(show_name)
+    # Check if show has already been played
+    if last_played:
+        last_played_time = datetime.fromisoformat(last_played['lastPlayed'])
+        show_start_time = datetime.fromisoformat(now_playing['showStart'])
+        if last_played_time > show_start_time:
+            logger.info(f"Scheduled show {show_name} has been played already at {last_played_time}")
+            return {
+                "__typename": "NothingPlaying",
+                "tryAgainInMin": try_again_time
+            }
+
+    last_played_uri = last_played['uri'] if last_played else None
+    next_video_uri = media_bridge.get_next_video_uri(show_name, last_played_uri)
+    if next_video_uri:
         return {
             "__typename": "Video",
-            "uri": "Key and Peele/Season 1/Episode 1",
-            "name": "Key and Peele",
-            "url": "http://192.168.1.22:8000/nick.mp4",
-            "lastPlayed": datetime.now().isoformat()
+            "uri": next_video_uri,
+            "name": show_name,
+            "url": "http://192.168.1.22:2222" + next_video_uri,
+            "lastPlayed": last_played['lastPlayed'] if last_played else None
         }
-    elif (anything_on == "audio"):
+
+    next_audio_uri = media_bridge.get_next_audio_uri(show_name, last_played_uri)
+    if next_audio_uri:
         return {
             "__typename": "Audio",
-            "uri": "Piper Jones/The Wandering Stars/Gordon Duncan Tunes",
-            "name": "Piper Jones",
-            "url": "http://192.168.1.22:8000/piper.mp3",
-            "lastPlayed": datetime.now().isoformat()
+            "uri": next_audio_uri,
+            "name": show_name,
+            "url": "http://192.168.1.22:2222" + next_audio_uri,
+            "lastPlayed": last_played['lastPlayed'] if last_played else None
         }
+
+    logger.info(f"No supported media found for: {show_name}")
+    return {
+        "__typename": "NothingPlaying",
+        "tryAgainInMin": try_again_time
+    }
+
 
 @mutation.field('markPlayed')
 def resolve_mark_played(_, info, name, uri):

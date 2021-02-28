@@ -2,8 +2,6 @@ from datetime import datetime
 import logging
 import os
 from pymongo import MongoClient
-import time
-from types import SimpleNamespace
 
 
 logger = logging.getLogger('gunicorn.error.' + __name__)
@@ -34,14 +32,14 @@ class DbBridge:
         return True
 
     def get_latest_schedule(self, max_num_shows: int):
-        show_time_entries = self.db.schedule.find().sort("start_time_epoch", -1).limit(max_num_shows)
+        entries = self.db.schedule.find().sort("start_time_epoch", -1).limit(max_num_shows)
         show_times = [
             {
                 "name": show_time['name'],
                 "showStart": self._datetime_epoch_to_str(show_time['start_time_epoch']),
                 "showEnd": self._datetime_epoch_to_str(show_time['end_time_epoch'])
             }
-            for show_time in show_time_entries
+            for show_time in entries
         ]
         return show_times
 
@@ -54,7 +52,7 @@ class DbBridge:
                 "end_time_epoch": { "$gte": now_epoch }
             }
         )
-        if (now_playing):
+        if now_playing:
             return {
                 "name": now_playing['name'],
                 "showStart": self._datetime_epoch_to_str(now_playing['start_time_epoch']),
@@ -73,8 +71,10 @@ class DbBridge:
         return True
 
     def get_last_played(self, name):
-        episode_entry = self.db.history.find_one(sort=[("played_time_epoch", -1)])
-        if (episode_entry):
+        episode_entry = self.db.history.find_one({
+            "name": name
+        }, sort=[("played_time_epoch", -1)])
+        if episode_entry:
             return {
                 "name": episode_entry['name'],
                 "uri": episode_entry['uri'],
